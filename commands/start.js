@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -28,7 +28,6 @@ module.exports = {
 		// Create Order
 		let order = '';
 
-		data.started = true;
 		await data.thread.members.fetch().then((members) => {
 			[...members.keys()].forEach(member => {
 				if (member !== process.env.CLIENT_ID) {
@@ -38,8 +37,20 @@ module.exports = {
 			});
 		});
 
+		// Update values
+		data.started = true;
 		client.threads.set(channel.id, data);
 
-		await interaction.reply(`Ready, set, go!\n${order}`);
+		// Create embed
+
+		const startEmbed = new EmbedBuilder()
+			.setColor(0xFF0099)
+			.setTitle(`Ready, set, ${data.name}!`)
+			.setDescription(`The game has started. When it's your turn, write **${data.words}** words to form a story. Have fun!`)
+			.addFields(
+				{ name: 'Order:', value: order },
+			);
+
+		await interaction.reply({ embeds: [startEmbed] });
 	},
 };
