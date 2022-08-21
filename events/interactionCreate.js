@@ -1,7 +1,7 @@
 module.exports = {
 	name: 'interactionCreate',
 	execute(client, interaction) {
-		console.log(`${interaction.user.tag} in #${interaction.channel.name} triggered an interaction.`);
+		console.log(`[${new Date(Date.now()).toISOString()}] ${interaction.user.tag} in #${interaction.channel.name} triggered "${interaction.commandName}".`);
 		if (!interaction.isChatInputCommand()) return;
 
 		const command = client.commands.get(interaction.commandName);
@@ -9,7 +9,7 @@ module.exports = {
 		if (!command) return;
 
 		try {
-			command.execute(interaction);
+			command.execute(interaction, client);
 		}
 		catch (error) {
 			console.error(error);
