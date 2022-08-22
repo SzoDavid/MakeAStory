@@ -33,7 +33,6 @@ module.exports = {
 			words: interaction.options.getInteger('words'),
 			players: [],
 			started: false,
-			thread: thread,
 		});
 
 		await interaction.reply({ content: 'The story has been started successfully', ephemeral: true });

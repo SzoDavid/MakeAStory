@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
 module.exports = {
@@ -28,7 +30,7 @@ module.exports = {
 		// Create Order
 		let order = '';
 
-		await data.thread.members.fetch().then((members) => {
+		await channel.members.fetch().then((members) => {
 			[...members.keys()].forEach(member => {
 				if (member !== process.env.CLIENT_ID) {
 					data.players.push(member);
@@ -36,10 +38,6 @@ module.exports = {
 				}
 			});
 		});
-
-		// Update values
-		data.started = true;
-		client.threads.set(channel.id, data);
 
 		// Create embed
 
@@ -50,6 +48,28 @@ module.exports = {
 			.addFields(
 				{ name: 'Order:', value: order },
 			);
+
+		// Collector
+
+		const filter = () => true;
+
+		client.collectors.set(`collector${channel.id}`, channel.createMessageCollector({ filter, time: 30000, max: 10000 }));
+
+		console.log(channel.name);
+
+		const collector = client.collectors.get(`collector${channel.id}`);
+
+		collector.on('collect', m => {
+			console.log(`Collected ${m.content}`);
+		});
+
+		collector.on('end', collected => {
+			console.log(`Collected ${collected.size} items`);
+		});
+
+		// Update values
+		data.started = true;
+		client.threads.set(channel.id, data);
 
 		await interaction.reply({ embeds: [startEmbed] });
 	},

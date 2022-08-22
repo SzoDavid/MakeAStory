@@ -7,6 +7,7 @@ const { Client, Collection, GatewayIntentBits } = require('discord.js');
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
 client.threads = new Collection();
+client.collectors = new Collection();
 
 // Command handler
 client.commands = new Collection();
