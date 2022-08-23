@@ -52,7 +52,6 @@ module.exports = {
 		// Collector
 
 		const filter = () => true;
-
 		client.collectors.set(`collector${channel.id}`, channel.createMessageCollector({ filter, time: 30000, max: 10000 }));
 
 		console.log(channel.name);
@@ -60,11 +59,19 @@ module.exports = {
 		const collector = client.collectors.get(`collector${channel.id}`);
 
 		collector.on('collect', m => {
-			console.log(`Collected ${m.content} from ${m.author.username}`);
+			// Don't write to the console if the message author is the bot itself. 
+			if (m.author.id !== process.env.CLIENT_ID) {
+				console.log(`Collected ${m.content} from ${m.author.username}`);
+			}
 		});
 
 		collector.on('end', collected => {
-			console.log(`Collected ${collected.size} items`);
+			console.log(`Collected ${collected.size - 1} items`);
+			
+			var messages = Array.from(collected.values());
+			// We skip the first item because it is the bot's embed.	
+			messages.shift();
+			messages.forEach(message => console.log(message.content));
 		});
 
 		// Update values
