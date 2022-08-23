@@ -12,11 +12,19 @@ function onEnd(client, channel) {
 
 	if (data.story.length < 1) return;
 
+	let credits = '';
+	data.players.forEach(member => {
+		credits += `<@${member}> `;
+	});
+
 	// Create embed
 	const finishEmbed = new EmbedBuilder()
 		.setColor(0xFF0099)
 		.setTitle(`${data.name} is ready for printing!`)
-		.setDescription(data.story);
+		.setDescription(data.story)
+		.addFields(
+			{ name: 'Credits', value: credits },
+		);
 
 	data.parent.send({ embeds: [finishEmbed] });
 }
