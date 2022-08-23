@@ -60,7 +60,7 @@ module.exports = {
 		const collector = client.collectors.get(`collector${channel.id}`);
 
 		collector.on('collect', m => {
-			console.log(`Collected ${m.content}`);
+			console.log(`Collected ${m.content} from ${m.author.username}`);
 		});
 
 		collector.on('end', collected => {
