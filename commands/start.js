@@ -1,5 +1,6 @@
 require('dotenv').config();
 
+const GameLogic = require('../gamelogic');
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
 module.exports = {
@@ -40,31 +41,27 @@ module.exports = {
 		});
 
 		// Create embed
-
 		const startEmbed = new EmbedBuilder()
 			.setColor(0xFF0099)
 			.setTitle(`Ready, set, ${data.name}!`)
-			.setDescription(`The game has started. When it's your turn, write **${data.words}** words to form a story. Have fun!`)
+			.setDescription(`The game has started. When it's your turn, write **${data.words}** words to form a story. Messages starting with \`${process.env.IGNORE_PREFIX}\` will be ignored. Have fun!`)
 			.addFields(
 				{ name: 'Order:', value: order },
 			);
 
 		// Collector
+		const filter = m => !(m.author.bot || m.content.startsWith(process.env.IGNORE_PREFIX));
 
-		const filter = () => true;
+		client.collectors.set(channel.id, channel.createMessageCollector({ filter }));
 
-		client.collectors.set(`collector${channel.id}`, channel.createMessageCollector({ filter, time: 30000, max: 10000 }));
-
-		console.log(channel.name);
-
-		const collector = client.collectors.get(`collector${channel.id}`);
+		const collector = client.collectors.get(channel.id);
 
 		collector.on('collect', m => {
-			console.log(`Collected ${m.content} from ${m.author.username}`);
+			GameLogic.onMessage(client, channel, m);
 		});
 
 		collector.on('end', collected => {
-			console.log(`Collected ${collected.size} items`);
+			GameLogic.onEnd(client, channel, collected);
 		});
 
 		// Update values
