@@ -28,10 +28,10 @@ module.exports = {
 
 		try {
 			const thread = await interaction.channel.threads.create({ name: name });
-		
+
 			thread.join();
 			await thread.members.add(interaction.user.id);
-			
+
 			client.threads.set(thread.id, {
 				owner: interaction.user.tag,
 				name: name,
@@ -42,12 +42,12 @@ module.exports = {
 				counter: 0,
 				story: '',
 			});
-			
+
 			await interaction.reply({ content: 'The story has been started successfully! After everyone has joined, run `/start` in the thread and after the game has finished run `/finish`!', ephemeral: true });
-		
+
 		} catch (error) {
 			console.error(error);
-			if (error.rawError.message = 'Invalid Form Body') {
+			if (error.rawError.message === 'Invalid Form Body') {
 				await interaction.reply({ content: 'Please choose a different name.', ephemeral: true });
 			} else {
 				await interaction.reply({ content: 'There is an unexpected error, please try again later.', ephemeral: true });
