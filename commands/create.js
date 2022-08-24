@@ -4,6 +4,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('create')
 		.setDescription('Creates a new story.')
+		.setDMPermission(false)
 		.addStringOption(option =>
 			option.setName('title')
 				.setDescription('The title which will be the name of the thread where the story will be written.')

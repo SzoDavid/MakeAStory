@@ -3,7 +3,8 @@ const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('about')
-		.setDescription('Replies with informations about the bot.'),
+		.setDescription('Replies with informations about the bot.')
+		.setDMPermission(false),
 	async execute(interaction) {
 		const aboutEmbed = new EmbedBuilder()
 			.setColor(0xFF0099)

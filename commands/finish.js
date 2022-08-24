@@ -3,7 +3,8 @@ const { SlashCommandBuilder } = require('discord.js');
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('finish')
-		.setDescription('Finish the story'),
+		.setDescription('Finish the story')
+		.setDMPermission(false),
 	async execute(interaction, client) {
 		// Tests
 		const channel = interaction.channel;

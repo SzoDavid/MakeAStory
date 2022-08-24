@@ -6,7 +6,8 @@ const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('start')
-		.setDescription('Start the story'),
+		.setDescription('Start the story')
+		.setDMPermission(false),
 	async execute(interaction, client) {
 		// Tests
 		const channel = interaction.channel;
