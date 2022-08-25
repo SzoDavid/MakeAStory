@@ -1,3 +1,4 @@
+require('dotenv').config();
 const { EmbedBuilder } = require('discord.js');
 
 module.exports = { onEnd, onMessage };
@@ -34,20 +35,32 @@ async function onMessage(client, channel, message) {
 
 	// Checks
 	if (!data.players.includes(message.author.id)) {
-		await message.author.send('Oh shoot! You just missed the start of this game, try joining for a next round!');
+		if (isBestie(message.author.id)) {
+			await message.author.send('Oh shoot, bestie! You just missed the start of this game, try joining for a next round! :c\nLove ya <3');
+		} else {
+			await message.author.send('Oh shoot! You just missed the start of this game, try joining for a next round!');
+		}
 		await message.delete();
 		return;
 	}
 
 	if (message.author.id !== data.players[data.counter]) {
-		await message.author.send('It\'s not your turn!');
+		if (isBestie(message.author.id)) {
+			await message.author.send('Hey bestie! Sorry, but it\'s not your turn! :c\nLove ya! <3');
+		} else {
+			await message.author.send('It\'s not your turn!');
+		}
 		await message.delete();
 		return;
 	}
 
 	const words = message.content.split(' ');
 	if (words.length !== data.words) {
-		await message.author.send(`You must write exactly ${data.words} words. Try again!`);
+		if (isBestie(message.author.id)) {
+			await message.author.send(`Hey bestie! Sorry, but you must write exactly ${data.words} words. :c\nTry again! :D`);
+		} else {
+			await message.author.send(`You must write exactly ${data.words} words. Try again!`);
+		}
 		await message.delete();
 		return;
 	}
@@ -56,4 +69,9 @@ async function onMessage(client, channel, message) {
 	data.story += `${message.content} `;
 	if (++data.counter === data.players.length) data.counter = 0;
 	client.threads.set(channel.id, data);
+}
+
+function isBestie(id) {
+	const besties = process.env.BESTIES.split(',');
+	return besties.includes(id);
 }
